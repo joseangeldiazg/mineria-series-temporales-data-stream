@@ -78,7 +78,6 @@ lines(tiempoTr, TendEstimadaTr.H1, col="blue")
 lines(tiempoTs, serieTs, col="red")
 lines(tiempoTs, TendEstimadaTs.H1, col="green")
 
-
 # Ahora comprobamos que la hipótesis de tendencia lineal es válida para ello aplicamos test estadisticos
 
 # Primero comprobamos que los datos son normales, para ello usamos el test de jarque.bera
@@ -344,8 +343,8 @@ lines(predicionArima011$`Valores-Ajustados`, col="blue")
 lines(predicionArima011$`Valores-Predichos`, col="red")
 lines(tiempoPred, predReales, col="green")
 
-
 ErrorMedio <- sum(abs(predReales-predicionArima011a$`Valores-Predichos`))
 ErrorMedio
 
 #Parece que el modelo con las medias móviles MA(1) ajusta mejor que el AR(4). El test de AIC estaba en lo cierto. 
+
