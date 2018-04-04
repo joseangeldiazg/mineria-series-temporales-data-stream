@@ -59,24 +59,24 @@ write(datos$Tmax, file = "data/Estacion3526X_diaria.txt", ncolumns = 365, append
 
 #En este caso no hay que agregar asi que creamos la serie normalmente
 
-serie<-datos$Tmax
-serie.ts <- ts(datos$Tmax, f=365)
-plot(decompose(serie.ts))
+seriediaria<-datos$Tmax
+seriediaria.ts <- ts(datos$Tmax, f=365)
+plot(decompose(seriediaria.ts))
 
 #Parece que las varianzas cambian por lo que deberemos normalizar los datos con un logaritmico
 
-serie.ts <- log(serie.ts)
-serie.log <- log(serie)
-plot(decompose(serie.ts))
+seriediaria.ts <- log(seriediaria.ts)
+seriediaria.log <- log(seriediaria)
+plot(decompose(seriediaria.ts))
 
 #Tras esto dividiremos en training y test que dejaremos 7 días para predecir y ver como ajusta el modelo
 
 NPred <- 7
 NTest <- 7
 
-serieTr <- serie.log[1:(length(serie.log)-NTest)]
+serieTr <- seriediaria.log[1:(length(seriediaria.log)-NTest)]
 tiempoTr <- 1:length(serieTr)
-serieTs <- serie.log[(length(serie.log)-NTest+1):length(serie)]
+serieTs <- seriediaria.log[(length(seriediaria.log)-NTest+1):length(seriediaria)]
 tiempoTs <- (tiempoTr[length(tiempoTr)]+1):(tiempoTr[length(tiempoTr)]+NTest)
 
 #Representamos gráficamente el espacio de training y test
