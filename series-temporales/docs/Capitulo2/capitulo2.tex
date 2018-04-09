@@ -29,6 +29,10 @@ Acorde a los resultados de la figura anterior, no podemos concluir que haya un p
 \section{Agregación}
 
 Este paso del preprocesado es solo necesario para la solución del problema mensual. Para ello, usaremos el comando aggregate y la función max para agregar para cada mes de cada año la mayor temperatura registrada de manera que podamos realizar predicciones y modelado de serie a nivel mensual. Para poder realizar esto, previamente hemos pasado la fecha de tipo string a tipo date y tras ello, hemos eliminado el día de la fecha de manera que podemos agregar por las parejas iguales de mes y año. 
+
+\section{Normalización}
+
+Una vez creadas las series temporales, estas se normalizaron usando un logaritmo para suavizar los cortes y las varianzas favoreciendo un mejor análisis y comprensión visual de la misma. 
 \pagebreak
 \clearpage
 %---------------------------------------------------

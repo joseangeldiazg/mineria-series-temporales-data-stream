@@ -129,7 +129,7 @@ lines(tiempoTs, serieTs.SinTendEst.H1,col="red")
 # 6. Explicación del procedimiento seguido para comprobar y conseguir la estacionaridad, en base a los ADF, ACF, PACF.
 
 # Para comprobar la estacionariedad vemos que adtest nos da p-value muy elevado con hipótesis alernativa
-# de ser estacionaria por lo que tendremos que aceptar que no es estacionaria. Acf tiende a 0 muy lento por lo que tambien
+# de ser estacionaria por lo que tendremos que aceptar que no es estacionaria. Acf tiende a 0 muy lento por lo que también
 # podemos apoyarnos en este gráfico para determinar que no lo es. 
 
 adtest.h1 <- adf.test(serieTr.SinTendEst.H1)
@@ -140,7 +140,7 @@ acf(serieTr.SinTendEst.H1)
 serieTr.SinTendEstDiff.H1 <- diff(serieTr.SinTendEst.H1)
 serieTs.SinTendEstDiff.H1 <- diff(serieTs.SinTendEst.H1)
 
-# Tras diferenciar las series podriamos ver como el test estadistico ahora si acepta la hipótesis de ser estacionaria.
+# Tras diferenciar las series podríamos ver como el test estadístico ahora si acepta la hipótesis de ser estacionaria.
 # Igualmente, el gráfico acf tiende a 0 rápidamente por lo que podremos afirmar este hecho.
 
 adtest.h1 <- adf.test(serieTr.SinTendEstDiff.H1)

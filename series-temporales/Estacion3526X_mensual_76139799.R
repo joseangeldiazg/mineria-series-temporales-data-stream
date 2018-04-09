@@ -82,7 +82,7 @@ plot(decompose(seriemensual.ts))
 
 # Acorde a los gráficos podemos deducir que no hay tendencia al menos a simple vista, aunque
 # si que se aprecia que descienden los valores. Por otro lado si que se aprecia una clara
-# estacionalidad. En el primer perídoo parece que ocurre de manera distinta pero es porque
+# estacionalidad. En el primer período parece que ocurre de manera distinta pero es porque
 # los datos que tenemos comienzan en mayo, es decir, a mediados de la serie ideal. 
 
 #Vamos a comenzar a estudiar y modelar la serie, primero partimos en training y test.
@@ -196,7 +196,7 @@ acf(serieTr.SinTendEst.H1)
 # Vamos a visualizar sus gráficos acf y pacf para estimar que modelos pueden ser posibles.
 
 acf(serieTr.SinTendEst.H1)
-pacf(serieTr.SinTendEst.H1)
+
 
 # En base a los gráficos, podemos estar ante un modelo MA(5) o AR(4). En base a estos modelos
 # Vamos a realizar comparaciones estadísticas para ver cual nos ofrece mejores resultados.
