@@ -1,0 +1,7 @@
+classified instances = 100.000
+classifications correct (percent) = 80,404
+Kappa Statistic (percent) = 57,416
+Kappa Temporal Statistic (percent) = 54,542
+Kappa M Statistic (percent) = 39,169
+model training instances = 100.000
+model serialized size (bytes) = 1.840

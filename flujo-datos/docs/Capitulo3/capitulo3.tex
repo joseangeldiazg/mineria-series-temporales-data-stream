@@ -1,0 +1,95 @@
+%?????????????????????????
+% Nombre: capitulo3.tex  
+% 
+% Texto del capitulo 3
+%---------------------------------------------------
+
+\chapter{Análisis de las series}
+\label{series} tran
+En este capítulo veremos un análisis teórico de las técnicas y soluciones aplicadas durante el transcurso de la práctica. Debido a que en el el código viene explicado todo correctamente en comentarios y explicaciones extensas en este apartado se dedica a puntualizar sobre los contenidos teóricos más relevantes para la solución del análisis de la seríe diaria (apartado \ref{diaria}) y mensual (apartado \ref{mensual}).
+\section{Serie Mensual}
+\label{mensual}
+En este apartado de la práctica se pedía analizar el tiempo en el mes de marzo teniendo constancia de los últimos años hasta febrero de 2018. 
+	\subsection{Análisis de tendencia y de estacionalidad}
+	Para este primer apartado comenzaremos con en el estudio del gráfico \ref{gmensual}, donde podemos ver  los componentes de la serie, lo cual que nos ayudará en un proceso descriptivo a saber por donde atacar nuestro problema.
+	
+	\begin{figure}[H]
+	\centering
+		\includegraphics[scale=0.6]{./Capitulo3/imagenes/graficomensual.png}
+		\caption{Descomposición serie mensual.}
+	\label{gmensual}
+	\end{figure}
+
+Acorde a los gráficos podemos deducir que no hay tendencia al menos a simple vista, aunque si que se aprecia que descienden los valores. Por otro lado si que se aprecia una clara estacionalidad. En el primer período parece que ocurre de manera distinta pero es porque los datos que tenemos comienzan en mayo, es decir, a mediados de la serie ideal. Una vez hecho esto, atacamos una posible tendencia, para ello modelamos una regresión lineal la cual usando los test estadísticos de normalidad nos indican que el test se ajusta apropiadamente y que estamos ante una pequeña tendencia descendente tal y como podemos ver en el gráfico \ref{tendenciamensual}.
+
+	\begin{figure}[H]
+	\centering
+		\includegraphics[scale=0.6]{./Capitulo3/imagenes/tendenciamensual.png}
+		\caption{Tendencia mensual.}
+	\label{tendenciamensual}
+	\end{figure}
+
+Tras esto determinar la tendencia, la modelamos y eliminamos de la serie. Hecho esto pasamos a eliminar la estacionaridad, de meses de calor y frío por lo que dividiremos esta en 6 apartados, para determinar esto también podemos ayudarnos con el gráfico acf. Una vez determinado el periodo de estacionalidad para eliminarla lo que hacemos es obtener las medias para cada valor de estacionalidad tras tener estos valores los restamos a la serie original para calcular el E(t). 
+
+	\subsection{Estacionareidad}
+
+Para poder hacer predicciones a lo largo del tiempo una serie deberá ser estacionaria, es decir si su media y varianza se mantienen a lo largo del tiempo. Para comprobar esto podemos basarnos en dos premisas:
+
+\begin{enumerate}
+\item Su grafico acf desciendo bruscamente a 0.
+\item El AD-Test nos ofrece valores de p-value muy altos. 
+\end{enumerate}
+
+En este caso, ambas premisas con p-value = 0,01 y un gráfico acf que desciende brusco a 0 ( \ref{acfmensual} ), nos llevan a comprobar nuestra hipótesis de serie estacionaria por lo que podremos hacer predicciones. 
+ 
+ 	\begin{figure}[H]
+	\centering
+		\includegraphics[scale=0.6]{./Capitulo3/imagenes/acfmensual.png}
+		\caption{ACF Mensual.}
+	\label{tendenciamensual}
+	\end{figure}
+ 
+	\subsection{Modelado y predicción}
+
+En base al gráfico acf( \ref{acfmensual} ) y al gráfico pacf ( \ref{acfmensual} ) podemos concluir que estamos ante modelos \textbf{MA(5)} o \textbf{AR(4)}, por lo que al no haber diferenciado probaremos un modelo  ARIMA(4,0,0) o 
+ARIMA(0,0,5). 
+
+
+	\begin{figure}[H]
+	\centering
+		\includegraphics[scale=0.6]{./Capitulo3/imagenes/pacfmensual.png}
+		\caption{PACF Mensual.}
+	\label{tendenciamensual}
+	\end{figure}
+
+Todos los test estadísticos nos llevan a pensar que los modelos ajustan bien, pero el AIC nos indica que podremos obtener mejores resultados con el ARIMA(4,0,0). Tras obtener los datos y predecir el siguiente valor de la serie, deshaciendo para ello los pasos anteriores realizados en el proceso de análisis esta serie nos ofrece un valor de error de en torno a  2º algo que a mi juicio parece aceptable. 
+
+\section{Serie Diaria}
+\label{dias}
+En este apartado de la práctica se pedía analizar el tiempo en la primera semana de marzo teniendo constancia, al igual que en la serie mensual hasta el 28 de febrero de 2018.
+
+	\subsection{Análisis de tendencia y de estacionalidad}
+Al igual que hicimos en la anterior serie iniciaremos el análisis en el gráfico de componentes de la serie. Analizando su gráfico de descomposición \ref{gdiaria}, podemos ver que al igual que pasaba con la serie mensual en este caso nos encontramos con un modelado de la tendencia bastante complejo. Hemos obtenido distintas gráficas en función de la frecuencia variando en periodos de 60 días, es decir, 2 meses y la tendencia tiene un comportamiento cíclico aunque nuevamente parece que esta se inclina hacia la derecha, es decir, desciende con el paso del tiempo. 
+
+	
+	\begin{figure}[H]
+	\centering
+		\includegraphics[scale=0.6]{./Capitulo3/imagenes/gdiaria.png}
+		\caption{Descomposición serie diaria.}
+	\label{gdiaria}
+	\end{figure}
+
+Este hecho de tendencia descendente choca con lo que podríamos pensar de un aumento gradual de las temperaturas debidos a temas de calentamiento climático. Para constatar estos hechos, hemos acudido a ciertas webs de meteorología y hemos podido comprobar que en los años  atrás ha habido grandes picos de temperatura máxima y mínimas alcanzados en Extremadura, algo que que ha hecho que que en estos dos últimos años más estables (puede verse en los picos de la gráfica) pueda aparecer una tendencia general descendente pero que muy seguro pueda desaparecer en los próximos meses ya que es muy poco acentuada. 
+
+Dado esto, utilizaremos una regresión lineal para modelar la tendencia y obtendremos mediante test estadísticos una estimación de su ajuste. Los test de normalidad se aceptan correctamente por lo que nuevamente podremos regresar los residuos de error para modelar la tendencia y eliminarla.  El modelado de estacionalidad es claramente anual por lo que la fijaremos en 365 días y aplicaremos el mismo método que en la serie mensual para modelarla. 
+	
+	\subsection{Estacionareidad}
+
+En este caso, aplicamos las mismas premisas que anteriormente, en base a las cuales el gráfico acf  nos dice que tendremos que diferenciar al no descender a 0 drásticamente por lo que diferenciamos por 1 la serie,  tras lo cual ambos casos, tanto el del test estadístico como el gráfico de correlaciones nos dicen que la serie es estacionaria por lo que podemos ejecutar el test. 
+	
+	\subsection{Modelado y predicción}
+ En este caso los modelos más apropiados se fijarían en un MA(5) o MA(6), por lo que habiendo diferenciado por 1, nos basaremos en ARIMA(0,1,5) o por ello ARIMA(0,1,6). Tras entrenar los modelos y comprobar usando test estadísticos de aleatoriedad y normalidad que los modelos son buenos, utilizamos el test de AIC para comprobar cual nos ofrecería mejores resultados, decantándonos por el modelo ARIMA(0,1,6) que ofrece menos error. El test de AIC vuelve a acertar y al comprobar con los valores reales de la primera semana de marzo tenemos en torno a 9º de error, algo muy elevado y que puedxe ser azar pero que nos lleva a pensar en el inusual frío que en Coria, se ha vivido este mes de marzo, algo que si obtenemos la temperatura de los años anteriores puede verse marcado con variaciones de en torno a 10 grados en comparación a la vivida estos meses, por lo que si comparamos el error se reduce drásticamente comparando otros años, esto puede ser debido a que el modelo entrena y ajusta en relación a instantes pasados, teniendo en cuenta los descensos bruscos y a los históricos de temperaturas altas el mes de marzo, quizá se haya podido errar en la predicción y sea necesario un modelo más avanzado para poder ajustar correctamente. 
+ 
+\pagebreak
+\clearpage
+%---------------------------------------------------
