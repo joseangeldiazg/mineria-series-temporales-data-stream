@@ -7,7 +7,36 @@
 \chapter{Teoría}
 \label{teoria}
 
+En este capítulo asentaremos los conceptos teóricos utilizados en el transcurso del anterior apartado. Comenzaremos con el concepto de \textbf{clasificación} y finalizaremos con el concepto de \textbf{concept drift}. 
+
+\section{Clasificación}
+
+\section{Concept Drift}
+
+El \textbf{\textit{concept drift}}, o cambio de contexto es uno de los principales problemas a los que nos enfrentamos en la minería de flujo de datos y viene a significar que los datos que han llegado en el pasado difieren en mayor o menor medida en los datos que estamos trabajando en este mismo momento por lo que se entra en conflicto con asunciones pasadas sobre los datos y causará un descenso de las medidas de bondad que en algunos casos puede llegar a ser drástico. Detectar estos cambios de contexto apropiadamente y readaptar los modelos será por tanto un gran reto pero necesario en los problemas de minería de flujo de datos. Su importancia en estos problemas es tal que han propiciado una gran línea de investigación con trabajos muy recientes que tratan sobre soluciones en la materia \cite{cd1} \cite{cd2} \cite{cd3} \cite{cd4}.
+
+Como hemos introducido anteriormente, el \textbf{\textit{concept drift}} se debe a cambios en los datos, pero estos no vendrán dados siempre de la misma manera sino que podrán presentarse de manera recurrente, gradual, incremental o brusco acorde a los ejemplos que podemos ver en la figura  \ref{figcd}.
  
+\begin{figure}[h]
+	\centering
+		\includegraphics[scale=0.4]{./Capitulo3/imagenes/figcd.png}
+		\caption{Tipos de concept drift.}
+	\label{figcd}
+\end{figure}
+ 
+El cambio de contexto podrá deberse a diversos motivos como pueden ser, la variación de características, la presencia de ruido, aparición de nuevas características o la influencia del entorno, siendo este uno de los motivos más delicados. Igualmente, sea cual sea el motivo del cambio de contexto, encontramos los siguientes métodos u algoritmos para para solventar el problema:
+
+\begin{itemize}
+
+\item  \textbf{Aprendizaje Online}: Estos algoritmos continuamente actualizan los parámetros de clasificación mientras el flujo de datos está activo. Hay que tener en cuenta que cada ejemplo solo debe ser procesado una vez, su rendimiento no debería ser distinto a los algoritmos offline y y los requisitos de tiempo y procesado deben ser limitados. Un algoritmo muy común dentro de esta categoría sería el CVFDT \cite{CVFDT}.
+
+\item \textbf{Soluciones de ventana}: Son algoritmos que olvidan datos antiguos conforme llegan datos nuevos, asumiendo que estos últimos tienen más relevancia en el problema. Esta solución, hace que de cara a un cambio de contexto el algoritmo reaprenderá este cambio de contexto y aunque tendrá cierto descenso en sus medidas en algún momento temporal, se recuperará y volverá a ofrecer resultados similares a los ofrecidos antes del cambio de contexto. Las soluciones más afamadas son la ventana deslizante, ventana en función de hitos y la ponderación de datos en función de la antigüedad. 
+
+\item \textbf{Ensembles}: Estos son algoritmos que entrenan diversos modelos de clasificadores elementales con ciertas variaciones de manera que la decisión final es una decisión colectiva entre todos ellos. Esta diversidad o variaciones para entrenar pueden deberse a las características, el modelo de clasificación o las instancias usadas para entrenar siendo estos conceptos muy relevantes en entornos cambiantes donde la diversidad puede venir marcada por los nuevos datos del stream, incluido el hipotético cambio de contexto. Los algoritmos más famosos dentro de este área serían los de Street \cite{street} y el de Wang \cite{wang}. 
+
+\item  \textbf{Algoritmos de detección}: Estos algoritmos en lugar de buscar adaptabilidad buscan detectar cuando se producirá cambio de contexto para posteriormente paliar sus efectos. Para detectar un cambio de contexto se suele analizar la disminución de las medidas de bondad. En estos algoritmos encontramos el problema de cuando detectar el cambio de contexto, si esperamos mucho una vez iniciado el mismo estaremos ante un método que es robusto, pero que perderá accuracy al activar los procesos tarde. Por otro lado, hacen saltar la alarma rápidamente el algoritmo paliará los efectos cuando el cambio de contexto aún no haya perjudicado mucho el modelo, pero por contra se enfrenta al problema de un elevado número de falsos positivos. 
+ 
+\end{itemize}
 \pagebreak
 \clearpage
 %---------------------------------------------------
