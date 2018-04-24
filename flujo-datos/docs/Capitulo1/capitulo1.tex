@@ -6,54 +6,47 @@
 
 \chapter{Introducción}
 
-En este documento encontramos el resultado final alcanzado durante el estudio del apartado de series temporales, enmarcado dentro de la asignatura de `Minería de Series Temporales y Flujos de Datos' del máster en Ciencia de Datos de la Universidad de Granada. En este primer capítulo, veremos una introducción al problema a resolver así como a los objetivos a alcanzar con esta práctica y la organización del trabajo.
+En este documento encontramos el resultado final alcanzado durante el estudio del apartado de \textbf{minería de flujos de datos}, enmarcado dentro de la asignatura de `Minería de Series Temporales y Flujos de Datos' del máster en Ciencia de Datos de la Universidad de Granada. En este primer capítulo, veremos una introducción al problema a resolver así como a los objetivos a alcanzar con esta práctica y la organización del trabajo.
 
 \section{Problema a resolver}
 \label{problema}
 
-Las series temporales han sido ampliamente estudiadas en la literatura y sus aplicaciones al mundo real son amplias y muy variadas. Estas aplicaciones, pueden ir desde temas financieros a problemas de stock o marketing, sin olvidarnos las ciencias de la tierra, entre las cuales destacan notablemente en problemas de climatología. 
+El problema a resolver en esta práctica se centrará en la resolución de ciertos problemas de clasificación con flujos de datos, de manera tanto estática como dinámica así como con cambio o sin cambio de contexto. Para resolver estos problemas, se propone el uso del software MOA \cite{moa} \cite{moa2} el cual usaremos con la línea de comandos o con la interfaz gráfica que podemos ver en la figura \ref{moa}. 
 
-En esta práctica nos enfrentaremos por tanto a un problema de climatología en el que partiendo de series de datos de estaciones meteorológicas \cite{aemet} tendremos que predecir los siguientes valores:
+\begin{figure}[h]
+	\centering
+		\includegraphics[scale=0.4]{./Capitulo1/imagenes/moa.png}
+		\caption{Interfaz del software moa.}
+	\label{moa}
+\end{figure}
+
+
+Los problemas a resolver serán:
 
 \begin{enumerate}
-\item Valores de temperatura máxima en la primera semana de marzo a nivel de días. Es decir, 7 valores.
-\item Valor de temperatura máxima en el mes de marzo a nivel de mes. Es decir, un solo valor.
+\item Entrenamiento offline (estacionario) y evaluación posterior.
+\item Entrenamiento online.
+\item Entrenamiento online en datos con concept drift.
+\item Entrenamiento online en datos con concept drift, incluyendo mecanismos para olvidar instancias pasadas.
+\item Entrenamiento online en datos con concept drift, incluyendo mecanismos para reinicializar modelos tras la detección de cambios de concepto.
 \end{enumerate}
 
-Estaremos por tanto ante un \textbf{problema real de ciencia de datos} que tendrá nos enfrentará a dos escenarios similares pero que conllevan diferencias significativas en el procesado y las cuales, deberían ser solventadas por el hipotético analista de datos. 
-
-\subsubsection{Estación meteorológica}
-
-La estación meteorológica objetivo está en la localidad de Coria en la provincia de Cáceres, localidad natural del autor del trabajo y aunque se conoce bien el lugar y su orografía nunca está de más cierta información que pueda ayudar en el proceso de análisis por ello, se han obtenido ciertos datos de la estación los cuales pueden verse en la tabla \ref{meteo}.
-
-\begin{table}[H]
-\centering
-\begin{tabular}{|l|l|}
-\hline
-\textbf{ID} & \textit{3526X} \\ \hline
-\textbf{PROVINCIA} & \textit{CÁCERES} \\ \hline
-\textbf{LATITUD} & \textit{400013N} \\ \hline
-\textbf{LONGITUD} & \textit{063327W} \\ \hline
-\textbf{ALTITUD} & \textit{313} \\ \hline
-\end{tabular}
-\caption{Especificaciones de la estación meteorológica.}
-\label{meteo}
-\end{table}
-
+Posteriormente a la solución de estos problemas, se propone una discusión teórica de los resultados, por lo que encontraremos la práctica dividida en dos apartados, por un lado el teórico ( capítulo \ref{teoria}) y por otro el práctico (\ref{practica}).
 
 \section{Objetivos}
+\label{objetivos}
 
-Los objetivos de esta practica podrían resumirse en los siguientes:
+Los objetivos de esta práctica serán:
 
 \begin{itemize}
-	\item Asentar y comprender la materia teórica de las series temporales vista durante el transcurso de la asignatura.
-	\item Pre-procesar los datos de manera correcta para poder ser procesados por los modelos de series temporales.
-	\item Usar correctamente los test estadísticos y comprender su potencia de cara a problemas de ciencia de datos.
-	\item Obtener un modelo de predicción aceptable para ambos problemas descritos en la sección \ref{problema}.
+	\item Asentar y comprender la materia teórica de la minería de flujo de datos vista durante el transcurso de la asignatura.
+	\item Comprender el uso y formas de utilización del software MOA.  
+	\item Asentar el conocimiento sobre test estadísticos par comparación de modelos.
+	\item Elaboración de una memoria donde se recojan todos los resultados de manera apropiada.
 \end{itemize}
 
 \section{Organización del trabajo} 
 
-La organización del presente documento, se centra en detallar cada uno de los pasos seguidos durante el estudio y resolución del problema planteado en esta introducción, tras la cual en el capítulo \ref{preprocesado} veremos las explicaciones asociadas al preprocesado de datos, más concretamente a la limpieza de valores perdidos. El grueso de la memoria está en el capítulo \ref{series} donde veremos los resultados obtenidos en la práctica así como el proceso para alcanzarlos. Finalizaremos la memoria con las conclusiones obtenidas en el transcurso de finalización de la misma en el capítulo \ref{conclusiones}. 
+La organización del presente documento, se centra en detallar cada uno de los pasos seguidos durante el estudio y resolución del problema planteado en esta introducción, tras la cual tendremos el contenido práctico en el capítulo \ref{practica}  y el cual representa el grueso de esta memoria. Tras este capítulo encontramos el capítulo \ref{teoria} donde desde un punto de vista teórico analizamos el concepto de \textbf{clasificación} y \textbf{concept drift} en minería de flujo de datos. Finalizaremos la memoria con las conclusiones obtenidas en el transcurso de finalización de la misma en el capítulo \ref{conclusiones}. 
 \clearpage
 %---------------------------------------------------
