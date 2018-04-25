@@ -6,9 +6,41 @@
 
 \chapter{Práctica}
 \label{practica}
+En este capítulo encontramos el desarrollo práctico de este trabajo. El discurso de este capítulo está organizado por secciones, una para cada experimento a resolver con el software MOA. 
+
+\section{Entrenamiento offline y evaluación posterior}
+
+\textit{Entrenar un clasificador HoeffdingTree offline (estacionario, aprender modelo únicamente), sobre un total de 1.000.000 de instancias procedentes de un flujo obtenido por el generador WaveFormGenerator con semilla aleatoria igual a 2. Evaluar posteriormente (sólo evaluación) con 1.000.000 de instancias generadas por el mismo tipo de generador, con semilla aleatoria igual a 4. Repita el proceso varias veces con la misma semilla en evaluación y diferentes semillas en entrenamiento, para crear una población de resultados. Anotar como resultados los valores de porcentajes de aciertos en la clasificación y estadístico Kappa. Repetir el paso anterior, sustituyendo el clasificador por HoeffdingTree adaptativo. Responda a la pregunta: ¿Cree que algún clasificador es significativamente mejor que el otro en este tipo de problemas? Razone su respuesta.}
+
+Para resolver este problema y dar la respuesta a si un clasificador es significativamente mejor que otro deberemos usar test estadísticos. Para ello, primero generamos una muestra de resultados  usando un script en el que ejecutaremos varias veces nuestros experimentos para cada uno de los clasificadores. El resultado de ese script sería:
+
+\begin{verbatim}
+for i in `seq 1 20`;
+    do
+        eval "htnormal=htnormal$i.txt"
+        eval "htadaptativo=htadaptativo$i.txt"
+        java -cp moa.jar -javaagent:sizeofag-1.0.0.jar moa.DoTask \
+         "EvaluateModel -m (LearnModel -l trees.HoeffdingTree -s \
+          (generators.WaveformGenerator -i $i)  -m 1000000) -s \
+          (generators.WaveformGenerator -i 4)" >  $htnormal \
+        java -cp moa.jar -javaagent:sizeofag-1.0.0.jar moa.DoTask  \
+        "EvaluateModel -m (LearnModel -l trees.HoeffdingAdaptiveTree -s \
+         (generators.WaveformGenerator -i $i)  -m 1000000) -s \
+         (generators.WaveformGenerator -i 4)" > >  $htadaptativo
+    done
+\end{verbatim}
+
+En el anterior script, hemos añadido dos tareas del software MOA, una para cada clasificador (HoeffdingTree y HoeffdingTree Adaptativo ) a las que añadimos el flujo generado por el WaveformGenerator con los parámetros que se nos pide en el ejercicio. Una vez ejecutado el algoritmo 20 veces, podemos ver los resultados en la siguiente tabla, sobre la cual, ejecutaremos los estadisticos necesarios para comprobar si hay diferencias sig
 
 
 
+\section{Entrenamiento online}
+
+\section{Entrenamiento online con concept drift}
+
+\section{Entrenamiento online con concept drift, incluyendo mecanismos para olvidar instancias pasadas}
+
+\section{Entrenamiento online en datos con concept drift, incluyendo mecanismos para reinicializar modelos tras la detección de cambios de concepto}
 \pagebreak
 \clearpage
 %---------------------------------------------------

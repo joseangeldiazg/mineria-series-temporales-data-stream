@@ -150,13 +150,12 @@ cvm.test(resultadosnb[1:30])
 # es decir, los datos provienen de una distribución normal.Por lo que 
 # podemos usar un test paramétrico para ver si hay diferencias. 
 
-wilcox.test(resultadosHT,resultadosnb, paired=T,conf.int = TRUE, exact = FALSE)
+t.test(resultadosHT,resultadosnb )
 
-# Con un p-value = 1.825e-06, el test de Wilcoxon nos dice que hay
+# Con un p-value < 2.2e-16, el test de Student nos dice que hay
 # diferencias significativas por lo que el mejor de los algoritmos es: Hoeffding Trees
 # esto es debido a que tenemos una muestra normal y diferencias significativas
 # por lo que nos fijamos en la media de acierto ofreciendo este mejores resultados.
-
 
 
 
@@ -256,9 +255,9 @@ cvm.test(resultadosdinamico[1:30])
 # es decir, los datos provienen de una distribución normal.Por lo que 
 # podemos usar un test paramétrico para ver si hay diferencias. 
 
-wilcox.test(resultadosestatico,resultadosdinamico, paired=T,conf.int = TRUE, exact = FALSE)
+t.test(resultadosestatico,resultadosdinamico )
 
-# Con un p-value = 1.825e-06, el test de Wilcoxon nos dice que hay
+# Con un p-value = 2.2e-16, el test de Student nos dice que hay
 # diferencias significativas, tal y como habiamos pensado. 
 
 

@@ -11,11 +11,27 @@ En este capítulo asentaremos los conceptos teóricos utilizados en el transcurso 
 
 \section{Clasificación}
 
+\textit{Explicar el problema de clasificación, los clasificadores utilizados en los experimentos de la sección 2, y en qué consisten los diferentes modos de evaluación/validación en flujos de datos}.
+
+El problema de la clasificación es uno de los problemas más ampliamente estudiado en ciencia de datos. Se basa en el entrenamiento y construcción de modelos predictivos en base a un conocimiento previo que viene dado en forma de datasets pre-etiquetados, una vez obtenido estos modelos, se deberá poder predecir la etiqueta o clase de una nueva muestra que se incluya al problema y de la cual no sabemos su clase de pertenencia.  En minería de flujo de datos el problema es similar, salvo por que los datos nos llegan en un flujo continuo, de manera que no podemos tener todo el dataset a priori para aprender y validar con las consiguientes dificultades que esto aporta al problema. 
+
+Los clasificadores usados en los experimentos anteriores son dos, concretamente el \textbf{Hoeffding Tree} y el \textbf{Hoeffding Tree Adaptativo}.
+
+\begin{itemize}
+\item Hoeffding Tree: Es un algoritmo basado en árboles de decisión que trabaja de manera incremental de ahí su uso para trabajar con flujos de datos. Asume que la distribución de ejemplos no cambia en el tiempo y  se basa en el principio matemático de Hoeffding, que nos dice el número de ejemplos que son estadísticamente necesarios para partir una rama del árbol en pos de mejorar o no empeorar las medidas de bondad. Acorde a este principio, los arboles explotan la idea de que un conjunto pequeño de muestras puede ser usada para crear un buen árbol de decisión y de  ahí procede su potencia en determinados problemas como los de flujo de datos. Es un algoritmo bastante eficiente donde tanto el tiempo como la memoria para construir los modelos son lineales y no dependen del número de ejemplos en el stream. 
+
+
+\item Hoeffding Tree Adaptativo: Este algoritmo es una versión del algoritmo anterior con idéntico funcionamiento pero que hace uso de ADWIN (Adaptative Window) para monitorizar los cambios de diferencia entre valores medios, con lo que detecta posibles descensos de accuracy en las ramas del árbol y las intercambia por mejores soluciones, acorde al accuracy, en la medida de lo posible por lo que a pesar de ser computacionalmente más complejo, los resultados serán en la mayoría de los casos mejores. 
+
+\end{itemize}
+
 \section{Concept Drift}
+
+\textit{Explicar en qué consiste el problema de concept drift y qué técnicas conoce para resolverlo en clasificación.}
 
 El \textbf{\textit{concept drift}}, o cambio de contexto es uno de los principales problemas a los que nos enfrentamos en la minería de flujo de datos y viene a significar que los datos que han llegado en el pasado difieren en mayor o menor medida en los datos que estamos trabajando en este mismo momento por lo que se entra en conflicto con asunciones pasadas sobre los datos y causará un descenso de las medidas de bondad que en algunos casos puede llegar a ser drástico. Detectar estos cambios de contexto apropiadamente y readaptar los modelos será por tanto un gran reto pero necesario en los problemas de minería de flujo de datos. Su importancia en estos problemas es tal que han propiciado una gran línea de investigación con trabajos muy recientes que tratan sobre soluciones en la materia \cite{cd1} \cite{cd2} \cite{cd3} \cite{cd4}.
 
-Como hemos introducido anteriormente, el \textbf{\textit{concept drift}} se debe a cambios en los datos, pero estos no vendrán dados siempre de la misma manera sino que podrán presentarse de manera recurrente, gradual, incremental o brusco acorde a los ejemplos que podemos ver en la figura  \ref{figcd}.
+Como hemos introducido anteriormente, el \textbf{\textit{concept drift}} se debe a cambios en los datos, pero estos no vendrán dados siempre de la misma manera sino que podrán presentarse de manera recurrente, gradual, incremental o brusco acorde a los ejemplos que podemos ver en la figura \ref{figcd}.
  
 \begin{figure}[h]
 	\centering
