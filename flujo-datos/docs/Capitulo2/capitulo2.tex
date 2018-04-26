@@ -14,7 +14,10 @@ En este capítulo encontramos el desarrollo práctico de este trabajo. El discurso
 
 Para resolver este problema y dar la respuesta a si un clasificador es significativamente mejor que otro deberemos usar test estadísticos. Para ello, primero generamos una muestra de resultados  usando un script en el que ejecutaremos varias veces nuestros experimentos para cada uno de los clasificadores. El resultado de ese script sería:
 
+{\small
 \begin{verbatim}
+#!/bin/bash
+
 for i in `seq 1 20`;
     do
         eval "htnormal=htnormal$i.txt"
@@ -29,18 +32,265 @@ for i in `seq 1 20`;
          (generators.WaveformGenerator -i 4)" > >  $htadaptativo
     done
 \end{verbatim}
+}
 
-En el anterior script, hemos añadido dos tareas del software MOA, una para cada clasificador (HoeffdingTree y HoeffdingTree Adaptativo ) a las que añadimos el flujo generado por el WaveformGenerator con los parámetros que se nos pide en el ejercicio. Una vez ejecutado el algoritmo 20 veces, podemos ver los resultados en la siguiente tabla, sobre la cual, ejecutaremos los estadisticos necesarios para comprobar si hay diferencias sig
+En el anterior script, hemos añadido dos tareas del software MOA, una para cada clasificador (HoeffdingTree y HoeffdingTree Adaptativo ) a las que añadimos el flujo generado por el WaveformGenerator con los parámetros que se nos pide en el ejercicio. Una vez ejecutado el algoritmo 20 veces, podemos ver los resultados en la tabla \ref{tabla1}, sobre la cual, ejecutaremos los estadísticos necesarios para comprobar si hay diferencias significativas entre los algoritmos usados. 
 
+El primer paso será por tanto discernir sobre la normalidad de los datos para poder aplicar posteriormente test paramétricos o no paramétricos en función de la distribución de los mismos. Para comprobar la normalidad de los datos dado que estamos ante un problema con pocas muestras usaremos el test de \textbf{Cramer-von Mises}. Este test nos ofrece para cada uno de los vectores de muestras valores de p-value por encima de 0.05, lo que nos indica que podemos aceptar la hipótesis de distribución normal en los datos. 
 
+Realizada esta hipótesis, podemos aplicar un test paramétrico como el t-student para obtener información acerca de las diferencias en los resultados. Una vez aplicado el test sobre los datos, obtenemos un valor de p-value = 0.0006479 lo que nos lleva a concluir que si existen diferencias significativas entre los datos y que el algoritmo \textbf{HoeffdingTree} con 84.52885acc de media es el mejor en este tipo de problemas frente al algoritmo HoeffdingTree Adaptativo con 84.39025acc de media. 
+
+Pese a lo que podríamos pensar, el algoritmo adaptativo se comporta peor en este tipo de problemas porque está pensado para adaptarse a cambios, es decir, es un algoritmo diseñado para los cambios de contexto en \textit{streaming} de datos. Si carecemos de este problema y además, tenemos todos los datos disponibles de manera offline, algo que se asimilaría más al aprendizaje por lotes que al streaming propiamente dicho, el algoritmo HoeffdingTree con su `simple' diseño incremental tiene más posibilidades de comportarse mejor.
+\begin{table}[ht]
+\centering
+\begin{tabular}{rrrrr}
+  \hline
+ & HT Acc & HT Kappa & HT Adaptative Acc & HT Adaptative Kappa \\ 
+  \hline
+1 & 84.64 & 76.96 & 84.48 & 76.72 \\ 
+  2 & 84.15 & 76.23 & 84.24 & 76.37 \\ 
+  3 & 84.80 & 77.20 & 84.27 & 76.41 \\ 
+  4 & 84.34 & 76.51 & 84.37 & 76.55 \\ 
+  5 & 84.48 & 76.72 & 84.26 & 76.39 \\ 
+  6 & 84.67 & 77.00 & 84.47 & 76.70 \\ 
+  7 & 84.59 & 76.89 & 84.42 & 76.62 \\ 
+  8 & 84.57 & 76.85 & 84.46 & 76.69 \\ 
+  9 & 84.51 & 76.77 & 84.47 & 76.71 \\ 
+  10 & 84.61 & 76.91 & 84.45 & 76.68 \\ 
+  11 & 84.43 & 76.65 & 84.46 & 76.69 \\ 
+  12 & 84.51 & 76.77 & 84.36 & 76.54 \\ 
+  13 & 84.63 & 76.94 & 84.33 & 76.49 \\ 
+  14 & 84.65 & 76.97 & 84.23 & 76.34 \\ 
+  15 & 84.55 & 76.82 & 84.42 & 76.62 \\ 
+  16 & 84.37 & 76.56 & 84.50 & 76.75 \\ 
+  17 & 84.46 & 76.69 & 84.42 & 76.63 \\ 
+  18 & 84.54 & 76.81 & 84.37 & 76.56 \\ 
+  19 & 84.58 & 76.87 & 84.33 & 76.49 \\ 
+  20 & 84.51 & 76.77 & 84.52 & 76.78 \\ 
+   \hline
+\end{tabular}
+\caption{Tabla de resultados del entrenamiento oflline.}
+\label{tabla1}
+\end{table}
 
 \section{Entrenamiento online}
 
-\section{Entrenamiento online con concept drift}
+\textit{Entrenar un clasificador HoeffdingTree online, mediante el método Interleaved Test-Then-Train, sobre un total de 1.000.000 de instancias procedentes de un flujo obtenido por el generador WaveFormGenerator con semilla aleatoria igual a 2, con una frecuencia de muestreo igual a 10.000. Pruebe con otras semillas aleatorias para crear una población de resultados. Anotar los valores de porcentajes de aciertos en la clasificación y estadístico Kappa. Repetir el paso anterior, sustituyendo el clasificador por HoeffdingTree Adaptativo. Responda a la pregunta: ¿Cree que algún clasificador es mejor que el otro en este tipo de problemas? Razone su respuesta.}
 
-\section{Entrenamiento online con concept drift, incluyendo mecanismos para olvidar instancias pasadas}
+En este caso hemos diseñado un problema online, con el generador WaveFormGenerator que genera un problema de predicción de 3 tipos de onda. Generaremos 100000 instancias con una frecuencia de 10000 por lo que los parámetros a usar serán -i 1000000 y -f 10000, para evaluar usaremos \textbf{Interleaved test then train} con la que cada instancia se usa para evaluar el modelo y luego para entrenar.  Acorde a este uso, podemos predecir que el comportamiento del modelo irá mejorando a medida que llegan los datos pues habrá podido construir un modelo más solido cuantos más datos haya tratado.
 
-\section{Entrenamiento online en datos con concept drift, incluyendo mecanismos para reinicializar modelos tras la detección de cambios de concepto}
+El experimento para poder comparar ambos modelos sería el que podemos ver en el siguiente script.
+
+{\small
+\begin{verbatim}
+#!/bin/bash
+
+for i in `seq 1 20`;
+    do
+        eval "htnormal=htnormal$i.txt"
+        eval "htadaptativo=htadaptativo$i.txt"
+        java -cp moa.jar -javaagent:sizeofag-1.0.0.jar moa.DoTask \
+        "EvaluateInterleavedTestThenTrain -l trees.HoeffdingTree -s \
+        (generators.WaveformGenerator -i $i) -i 1000000 -f 10000" \
+         >  $htnormal
+        java -cp moa.jar -javaagent:sizeofag-1.0.0.jar moa.DoTask  \
+        "EvaluateInterleavedTestThenTrain -l trees.HoeffdingAdaptiveTree\
+         -s (generators.WaveformGenerator -i $i) -i 1000000 -f 10000" \
+         >  $htadaptativo
+    done
+\end{verbatim}
+}
+
+Ejecutado el experimento, podemos ver los resultados obtenidos en la tabla \ref{tabla2}. Sobre estos resultados, nuevamente ejecutaremos el test \textbf{Cramer-von Mises} que en ambos casos arrojará p-values altos que nos llevan a aceptar la hipótesis de distribución normal, por lo que nuevamente usando el test t-student podremos ver si hay diferencias significativas. El p-value en este caso es de 0.008351, lo que nos lleva nuevamente a concluir que las diferencias no se deben al azar y que el algoritmo no adaptativo vuelve a ser mejor en este tipo de problemas. 
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{rrrrr}
+  \hline
+ & HT Acc & HT Kappa & HT Adaptative Acc & HT Adaptative Kappa \\ 
+  \hline
+1 & 83.89 & 75.84 & 83.80 & 75.71 \\ 
+  2 & 83.79 & 75.68 & 83.73 & 75.60 \\ 
+  3 & 83.89 & 75.83 & 83.79 & 75.68 \\ 
+  4 & 84.05 & 76.07 & 83.80 & 75.70 \\ 
+  5 & 83.84 & 75.76 & 83.71 & 75.57 \\ 
+  6 & 83.91 & 75.86 & 83.84 & 75.76 \\ 
+  7 & 83.89 & 75.83 & 83.78 & 75.67 \\ 
+  8 & 83.87 & 75.80 & 83.90 & 75.85 \\ 
+  9 & 83.79 & 75.68 & 83.83 & 75.74 \\ 
+  10 & 83.85 & 75.77 & 83.90 & 75.85 \\ 
+  11 & 83.75 & 75.62 & 83.74 & 75.61 \\ 
+  12 & 83.84 & 75.76 & 83.74 & 75.61 \\ 
+  13 & 83.98 & 75.96 & 83.89 & 75.84 \\ 
+  14 & 83.88 & 75.82 & 83.86 & 75.79 \\ 
+  15 & 83.98 & 75.98 & 83.87 & 75.81 \\ 
+  16 & 83.83 & 75.75 & 83.89 & 75.83 \\ 
+  17 & 83.90 & 75.84 & 83.74 & 75.61 \\ 
+  18 & 83.84 & 75.76 & 83.76 & 75.64 \\ 
+  19 & 83.79 & 75.68 & 83.75 & 75.63 \\ 
+  20 & 83.82 & 75.72 & 83.82 & 75.73 \\ 
+   \hline
+ \end{tabular}
+\caption{Tabla de resultados del entrenamiento online.}
+\label{tabla2}
+\end{table}
+
+La conclusión a la que podemos llegar nuevamente en este punto es que al carecer de cambio de contexto el algoritmo no adaptativo se comporta mejor que el adaptativo, ya que nuevamente la capacidad de readaptarse en un problema en el que los datos seguirán llegando con la misma distribución no es necesaria. Igualmente, si analizamos el gráfico \ref{ejemplo} donde hemos representado el comportamiento de ambos algoritmos para este ejemplo, podemos extraer conclusiones interesantes. Por un lado, podemos ver como tal y como predijimos al inicio del apartado, el algoritmo aumenta su accuracy a medida que llegan mas muestras, pues como estas se usan para entrenar el modelo será mas rico al final. Otra conclusión interesante recae en la comparación de ambos algoritmos,, vemos como el normal baja en accuracy al inicio hasta que es capaz de construir un modelo solido, momento en el que empieza a mejorar. Por otro lado, vemos como en las etapas iniciales el algoritmo adaptativo, es capaz de mejorar bastante el no adaptativo ya que con pocos datos es capaz de readaptar sus ramas a los datos actuales sin necesidad de esperar nuevos. 
+
+\begin{figure}[h]
+	\centering
+		\includegraphics[scale=0.36]{./Capitulo2/imagenes/ejemplo.png}
+		\caption{Comparación adaptativo y no adaptativo en online sin CD.}
+	\label{ejemplo}
+\end{figure}
+
+\section{Entrenamiento online con CD}
+
+\textit{Entrenar un clasificador HoeffdingTree online, mediante el método Interleaved Test-Then-Train, sobre un total de 2.000.000 de instancias muestreadas con una frecuencia de 100.000, sobre datos procedentes de un generador de flujos RandomRBFGeneratorDrift, con semilla aleatorio igual a 1 para generación de modelos y de instancias, generando 2 clases, 7 atributos, 3 centroides en el modelo, drift en todos los centroides y velocidad de cambio igual a 0.001. Pruebe con otras semillas aleatorias. Anotar los valores de porcentajes de aciertos en la clasificación y estadístico Kappa. Compruebe la evolución de la curva de aciertos en la GUI de MOA. Repetir el paso anterior, sustituyendo el clasificador por HoeffdingTree adaptativo. Responda a la pregunta: ¿Cree que algún clasificador es mejor que el otro en este tipo de problemas? Razone su respuesta.}
+
+
+{\small
+\begin{verbatim}
+#!/bin/bash
+
+for i in `seq 1 20`;
+    do
+        eval "htnormal=htnormal$i.txt"
+        eval "htadaptativo=htadaptativo$i.txt"
+        java -cp moa.jar -javaagent:sizeofag-1.0.0.jar moa.DoTask \
+        "EvaluateInterleavedTestThenTrain -l trees.HoeffdingTree -s \
+        (generators.RandomRBFGeneratorDrift -s 0.001 -k 3 -r 2 -i $i -a 7 -n 3) \
+        -i 2000000" >  $htnormal
+        java -cp moa.jar -javaagent:sizeofag-1.0.0.jar moa.DoTask  \
+        "EvaluateInterleavedTestThenTrain -l trees.HoeffdingAdaptiveTree -s \
+         (generators.RandomRBFGeneratorDrift -s 0.001 -k 3 -r 3 -i $i -a 7 -n 3)\
+	 -i 2000000" >  $htadaptativo
+    done
+\end{verbatim}
+}
+
+
+
+Los resultados de estos experimentos pueden verse en la tabla \ref{tabla3}.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{rrrrr}
+  \hline
+ & HT Acc & HT Kappa & HT Adaptative Acc & HT Adaptative Kappa \\ 
+  \hline
+1 & 83.98 & 29.78 & 96.33 & 92.24 \\ 
+  2 & 83.96 & 29.39 & 96.28 & 92.13 \\ 
+  3 & 83.97 & 28.94 & 96.31 & 92.19 \\ 
+  4 & 83.95 & 29.23 & 96.34 & 92.25 \\ 
+  5 & 83.98 & 29.81 & 96.33 & 92.24 \\ 
+  6 & 83.98 & 29.44 & 96.30 & 92.17 \\ 
+  7 & 83.90 & 29.56 & 96.33 & 92.23 \\ 
+  8 & 83.96 & 29.92 & 96.22 & 92.01 \\ 
+  9 & 84.01 & 30.06 & 96.24 & 92.04 \\ 
+  10 & 83.96 & 29.42 & 96.28 & 92.14 \\ 
+  11 & 83.99 & 29.71 & 96.24 & 92.04 \\ 
+  12 & 83.95 & 29.52 & 96.24 & 92.04 \\ 
+  13 & 83.92 & 29.78 & 96.29 & 92.15 \\ 
+  14 & 84.00 & 29.59 & 96.26 & 92.08 \\ 
+  15 & 83.90 & 29.14 & 96.30 & 92.18 \\ 
+  16 & 83.98 & 29.64 & 96.22 & 92.00 \\ 
+  17 & 83.93 & 29.50 & 96.27 & 92.12 \\ 
+  18 & 84.02 & 29.92 & 96.26 & 92.09 \\ 
+  19 & 83.99 & 30.11 & 96.30 & 92.17 \\ 
+  20 & 83.96 & 30.00 & 96.30 & 92.16 \\ 
+   \hline
+\end{tabular}
+\caption{Tabla de resultados del entrenamiento online con CD.}
+\label{tabla3}
+\end{table}
+
+
+
+
+
+\begin{figure}[h]
+	\centering
+		\includegraphics[scale=0.35]{./Capitulo2/imagenes/semilla1vs2.png}
+		\caption{Gráfico de evolución ACC entre semilla 1 y 2  en HoeffdingTree .}
+	\label{semilla1vs2}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+		\includegraphics[scale=0.35]{./Capitulo2/imagenes/semilla2vs3.png}
+		\caption{Gráfico de evolución ACC entre semilla 2 y 3  en HoeffdingTree .}
+	\label{semilla2vs3}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+		\includegraphics[scale=0.35]{./Capitulo2/imagenes/semilla3vs1.png}
+		\caption{Gráfico de evolución ACC entre semilla 3 y 1  en HoeffdingTree .}
+	\label{semilla3vs1}
+\end{figure}
+
+
+
+\begin{figure}[h]
+	\centering
+		\includegraphics[scale=0.35]{./Capitulo2/imagenes/sa2vs1.png}
+		\caption{Gráfico de evolución ACC entre semilla 1 y 2  en HoeffdingTree Adaptativo.}
+	\label{sa2vs1}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+		\includegraphics[scale=0.35]{./Capitulo2/imagenes/sa2vs3.png}
+		\caption{Gráfico de evolución ACC entre semilla 2 y 3  en HoeffdingTree Adaptativo.}
+	\label{sa2vs3}
+\end{figure}
+
+\begin{figure}[h]
+	\centering
+		\includegraphics[scale=0.35]{./Capitulo2/imagenes/sa3vs1.png}
+		\caption{Gráfico de evolución ACC entre semilla 3 y 1  en HoeffdingTree Adaptativo.}
+	\label{sa3vs1}
+\end{figure}
+
+
+\section{Entrenamiento online con CD y mecanismos para olvidar instancias pasadas}
+
+\textit{Repita la experimentación del apartado anterior, cambiando el método de evaluación ?Interleaved Test-Then-Train? por el método de evaluación ?Prequential?, con una ventana deslizante de tamaño 1.000. ¿Qué efecto se nota en ambos clasificadores? ¿A qué es debido? Justifique los cambios relevantes en los resultados de los clasificadores.}
+
+
+{\small
+\begin{verbatim}
+
+EvaluatePrequential -l trees.HoeffdingAdaptiveTree \
+-s (generators.RandomRBFGeneratorDrift -s 0.001 -k 3 -a 7 -n 3) \
+-i 2000000
+
+EvaluatePrequential -l trees.HoeffdingTree -s \
+(generators.RandomRBFGeneratorDrift -s 0.001 -k 3 -a 7 -n 3)\
+ -i 2000000
+\end{verbatim}
+}
+
+
+
+\section{Entrenamiento online con CD y  detección CD}
+
+\textit{Repita la experimentación del apartado 2.3, cambiando el modelo (learner) a un clasificador simple basado en reemplazar el clasificador actual cuando se detecta un cambio de concepto (SingleClassifierDrift). Como detector de cambio de concepto, usar el método DDM con sus parámetros por defecto. Como modelo a aprender, usar un clasificador HoeffdingTree. Repita el paso anterior cambiando el clasificador HoeffdingTree por un clasificador HoeffdingTree adaptativo. Responda a la siguiente pregunta: ¿Qué diferencias se producen entre los métodos de los apartados 2.3, 2.4 y 2.5? Explique similitudes y diferencias entre las diferentes metodologías, y discuta los resultados obtenidos por cada una de ellas en el flujo de datos propuesto.}
+
+
+{\small
+\begin{verbatim}
+EvaluateInterleavedTestThenTrain -l (drift.SingleClassifierDrift \
+ -l trees.HoeffdingAdaptiveTree) -s (generators.RandomRBFGeneratorDrift\
+ -s 1.0 -k 3 -a 7 -n 3) -i 2000000
+
+EvaluateInterleavedTestThenTrain -l (drift.SingleClassifierDrift \
+-l trees.HoeffdingTree) -s (generators.RandomRBFGeneratorDrift \
+-s 1.0 -k 3 -a 7 -n 3) -i 2000000
+\end{verbatim}
+}
+
 \pagebreak
 \clearpage
 %---------------------------------------------------

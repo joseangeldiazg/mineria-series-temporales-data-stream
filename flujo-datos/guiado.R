@@ -101,12 +101,6 @@ resultadosHT[30]<-as.numeric(as.character(tableht30$V5[100]))
 
 
 
-resultadosnb<-vector()
-resultadosnb[1]<-as.numeric(as.character(tablenb1$V5[100]))
-resultadosnb[2]<-as.numeric(as.character(tablenb2$V5[100]))
-resultadosnb[3]<-as.numeric(as.character(tablenb3$V5[100]))
-resultadosnb[4]<-as.numeric(as.character(tablenb4$V5[100]))
-resultadosnb[5]<-as.numeric(as.character(tablenb5$V5[100]))
 resultadosnb[6]<-as.numeric(as.character(tablenb6$V5[100]))
 resultadosnb[7]<-as.numeric(as.character(tablenb7$V5[100]))
 resultadosnb[8]<-as.numeric(as.character(tablenb8$V5[100]))
@@ -162,8 +156,6 @@ t.test(resultadosHT,resultadosnb )
 #RESULTADOS CONCEPT DRIFT
 
 #Leemos inicialmente los dináicos que tienen el mismo formato que anteriormente:
-
-?read.table
 
 tabledinamico1<-read.table("data/concept-drift/dinamico1.txt", sep = "," , header = T)
 tabledinamico2<-read.table("data/concept-drift/dinamico2.txt", sep = "," , header = T)
