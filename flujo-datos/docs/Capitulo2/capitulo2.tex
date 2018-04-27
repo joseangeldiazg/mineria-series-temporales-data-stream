@@ -216,24 +216,23 @@ Dado que se pedía comprar el modelo con distintos valores de semilla y comprobar
 \begin{figure}[H]
 	\centering
 		\includegraphics[scale=0.35]{./Capitulo2/imagenes/semilla1.png}
-		\caption{Evolución ACC para HT  y HTAdaptativo para semilla 1.}
+		\caption{ACC para HT  y HTAdaptativo para semilla 1.}
 	\label{semilla1}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
 		\includegraphics[scale=0.35]{./Capitulo2/imagenes/semilla2.png}
-		\caption{Evolución ACC para HT  y HTAdaptativo para semilla 2.}
+		\caption{ACC para HT  y HTAdaptativo para semilla 2.}
 	\label{semilla2}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
 		\includegraphics[scale=0.35]{./Capitulo2/imagenes/semilla3.png}
-		\caption{Evolución ACC para HT  y HTAdaptativo para semilla 3 .}
+		\caption{ACC para HT  y HTAdaptativo para semilla 3 .}
 	\label{semilla3}
 \end{figure}
-
 
 
 \section{Entrenamiento online con CD y mecanismos para olvidar instancias pasadas}
@@ -255,13 +254,52 @@ EvaluatePrequential -l trees.HoeffdingTree -s \
 \end{verbatim}
 }
 
-En las tareas anteriores hemos usado los mismos clasificadores que en el punto anterior, así como el mismo generador de flujo con cambio de contexto, el cambio en este punto está en añadir el evaluador Prequential con ventana deslizante de 1000, parámetro por defecto de esta evaluación y que no viene representado en la tarea por ese motivo. 
+En las tareas anteriores hemos usado los mismos clasificadores que en el punto anterior, así como el mismo generador de flujo con cambio de contexto, el cambio en este punto está en añadir el evaluador Prequential con ventana deslizante de 1000, parámetro por defecto de esta evaluación y que no viene representado en la tarea por ese motivo. Para poder tener algo de variedad, se han ejecutado las diferentes tareas tres veces con distintas semillas, cuyos resultados pueden verse en la tabla \ref{tabla4}.
 
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{rrrrr}
+  \hline
+ & HT Acc & HT Kappa & HT Adaptative Acc & HT Adaptative Kappa \\ 
+  \hline
+  1 & 76.6 & 52.558 & 96.6 & 93.190 \\ 
+  2 & 86.5  & 39.82 & 95.3 & 82.198 \\ 
+  3 & 66.8 & 23.88 & 98.0 & 95.75 \\ 
+   \hline
+\end{tabular}
+\caption{Tabla de resultados del entrenamiento online con CD y ventana deslizante.}
+\label{tabla4}
+\end{table}
+
+Acorde a estos datos podemos concluir que el algoritmos adaptativo es mejor, que el no adaptativo debido sin duda a la capacidad de recuperarse ante los cambios que el \textit{concept drift} añade en el problema. Para un mejor estudio, se han obtenido capturas de pantalla del comportamiento de los clasificadores para distintas semillas aleatorias. En los gráficos \ref{g4} \ref{g5} y \ref{g6} podemos ver el comportamiento en rojo del clasificador adapativo y en azul el no adaptativo. 
+
+\begin{figure}[H]
+	\centering
+		\includegraphics[scale=0.35]{./Capitulo2/imagenes/g4.png}
+		\caption{ACC con ventana para HT y HTAdaptativo y semilla 1.}
+	\label{g4}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+		\includegraphics[scale=0.35]{./Capitulo2/imagenes/g5.png}
+		\caption{ACC con ventana para HT y HTAdaptativo y semilla 2.}
+	\label{g5}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+		\includegraphics[scale=0.35]{./Capitulo2/imagenes/g6.png}
+		\caption{ACC con ventana para HT y HTAdaptativo y semilla 3 .}
+	\label{g6}
+\end{figure}
+
+Analizando los gráficos lo primero que se ve es que hay descensos bruscos y subidas igualmente bruscas de manera que se generan gráficos de `sierra'. Estos descensos y subidas en comparación con los gráficos de tendencias suaves del punto anterior ( gráficos \ref{semilla1}, \ref{semilla2} y \ref{semilla3} ) pueden estar debido a que a diferencia de lo que se hacia antes, ahora olvidamos instancias pasadas por lo que los clasificadores se entrenan y validan solo con una muestra de datos reciente, olvidando lo anterior de manera que un cambio de contexto puede ser más crítico pero también más fácilmente recuperable, el problema en este caso es que al recuperararse de uno llega otro y hace que aparezcan estos gráficos en `sierra', pero en un problema real esta ventana deslizante con cambios de contexto mas prolongados en el tiempo nos llevarían a tener modelos más sólidos y que se recuperarían ante fallos de una manera muy solida. 
 
 \section{Entrenamiento online con CD y  detección CD}
 
-\textit{Repita la experimentación del apartado 2.3, cambiando el modelo (learner) a un clasificador simple basado en reemplazar el clasificador actual cuando se detecta un cambio de concepto (SingleClassifierDrift). Como detector de cambio de concepto, usar el método DDM con sus parámetros por defecto. Como modelo a aprender, usar un clasificador HoeffdingTree. Repita el paso anterior cambiando el clasificador HoeffdingTree por un clasificador HoeffdingTree adaptativo. Responda a la siguiente pregunta: ¿Qué diferencias se producen entre los métodos de los apartados 2.3, 2.4 y 2.5? Explique similitudes y diferencias entre las diferentes metodologías, y discuta los resultados obtenidos por cada una de ellas en el flujo de datos propuesto.}
-
+\textit{Repita la experimentación del apartado 2.3, cambiando el modelo (learner) a un clasificador simple basado en reemplazar el clasificador actual cuando se detecta un cambio de concepto (SingleClassifierDrift). Como detector de cambio de concepto, usar el método DDM con sus parámetros por defecto. Como modelo a aprender, usar un clasificador HoeffdingTree. Repita el paso anterior cambiando el clasificador HoeffdingTree por un clasificador HoeffdingTree Adaptativo. Responda a la siguiente pregunta: ¿Qué diferencias se producen entre los métodos de los apartados 2.3, 2.4 y 2.5? Explique similitudes y diferencias entre las diferentes metodologías, y discuta los resultados obtenidos por cada una de ellas en el flujo de datos propuesto.}
 
 {\small
 \begin{verbatim}
