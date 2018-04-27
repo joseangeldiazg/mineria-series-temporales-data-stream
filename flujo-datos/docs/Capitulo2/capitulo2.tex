@@ -149,6 +149,10 @@ La conclusión a la que podemos llegar nuevamente en este punto es que al carecer
 \textit{Entrenar un clasificador HoeffdingTree online, mediante el método Interleaved Test-Then-Train, sobre un total de 2.000.000 de instancias muestreadas con una frecuencia de 100.000, sobre datos procedentes de un generador de flujos RandomRBFGeneratorDrift, con semilla aleatorio igual a 1 para generación de modelos y de instancias, generando 2 clases, 7 atributos, 3 centroides en el modelo, drift en todos los centroides y velocidad de cambio igual a 0.001. Pruebe con otras semillas aleatorias. Anotar los valores de porcentajes de aciertos en la clasificación y estadístico Kappa. Compruebe la evolución de la curva de aciertos en la GUI de MOA. Repetir el paso anterior, sustituyendo el clasificador por HoeffdingTree adaptativo. Responda a la pregunta: ¿Cree que algún clasificador es mejor que el otro en este tipo de problemas? Razone su respuesta.}
 
 
+En este caso, se pide generar un flujo online con cambio de contexto, de primeras esto nos lleva a pensar que nuestro algoritmo adaptativo será capaz de readaptarse a los cambios de contexto y por tanto ofrecerá grandes resultados frente al no adaptativo. Para generar el flujo, usaremos el  RandomRBFGeneratorDrift que genera una función radial aleatoria con cambio de contexto el evaluador y los clasificadores serán los mismos que los utilizados hasta ahora. 
+
+Nuevamente, como se pide saber si hay algún clasificador mejor para este problema, usaremos test estadísticos sobre una población de resultados construida con el siguiente script.
+
 {\small
 \begin{verbatim}
 #!/bin/bash
@@ -169,9 +173,9 @@ for i in `seq 1 20`;
 \end{verbatim}
 }
 
+Una vez ejecutado el script y cargados los datos a R, podemos compilar los resultados en la tabla \ref{tabla3}. Nuevamente, el test de normalidad nos dice con p-values elevados que estamos ante distribuciones normales de los resultados por lo que podemos aplicar un test paramétrico para saber si hay diferencias significativas, aunque en este caso, es claramente obvio que si que las habrá.  El p-value del t-student nos ofrece un resultado  \textbf{p-value < 2.2e-16} lo que nos indica que si hay diferencias significativas y el \textbf{HoeffdingTree adaptativo} es el mejor algoritmo en este problema con una media de 96.28154acc frente al no adaptativo con 83.96403acc. 
 
-
-Los resultados de estos experimentos pueden verse en la tabla \ref{tabla3}.
+El resultado de este experimento era obvio, ya que al generar un cambio de contexto el algoritmo adaptativo se readapta y es capaz de hacer frente al mismo de manera sencilla, por decirlo de alguna manera. Por otro lado, el algoritmo no adaptativo al generarse cambio de contexto con cierta regularidad hace que su comportamiento vaya empeorando ya que no es capaz de generalizar y cuando comienza a generalizar el cambio de contexto le hace empeorar. 
 
 \begin{table}[ht]
 \centering
@@ -206,58 +210,37 @@ Los resultados de estos experimentos pueden verse en la tabla \ref{tabla3}.
 \end{table}
 
 
+Dado que se pedía comprar el modelo con distintos valores de semilla y comprobar sus gráficas, se han elaborado una serie de baterías de prueba en las que se enfrentan algoritmo adaptativo y no adaptativo con semillas aleatorias que van de 1 a 3. Los resultados de estos experimentos pueden verse en los gráficos \ref{semilla1}, \ref{semilla2} y \ref{semilla3}, donde podemos ver tal y como era de esperar como el algoritmo adaptativo (rojo) se encuentra por encima en todos los casos además de mantenerse estable en el valor de accuracy ofrecido. Por otro lado, si nos fijamos en al algoritmo no adaptativo (azul) podemos concluir como los cambios de contexto le hacen empeorar teniendo siempre una tendencia descendente en los experimentos realizados. 
 
 
-
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
-		\includegraphics[scale=0.35]{./Capitulo2/imagenes/semilla1vs2.png}
-		\caption{Gráfico de evolución ACC entre semilla 1 y 2  en HoeffdingTree .}
-	\label{semilla1vs2}
+		\includegraphics[scale=0.35]{./Capitulo2/imagenes/semilla1.png}
+		\caption{Evolución ACC para HT  y HTAdaptativo para semilla 1.}
+	\label{semilla1}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
-		\includegraphics[scale=0.35]{./Capitulo2/imagenes/semilla2vs3.png}
-		\caption{Gráfico de evolución ACC entre semilla 2 y 3  en HoeffdingTree .}
-	\label{semilla2vs3}
+		\includegraphics[scale=0.35]{./Capitulo2/imagenes/semilla2.png}
+		\caption{Evolución ACC para HT  y HTAdaptativo para semilla 2.}
+	\label{semilla2}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
 	\centering
-		\includegraphics[scale=0.35]{./Capitulo2/imagenes/semilla3vs1.png}
-		\caption{Gráfico de evolución ACC entre semilla 3 y 1  en HoeffdingTree .}
-	\label{semilla3vs1}
+		\includegraphics[scale=0.35]{./Capitulo2/imagenes/semilla3.png}
+		\caption{Evolución ACC para HT  y HTAdaptativo para semilla 3 .}
+	\label{semilla3}
 \end{figure}
 
-
-
-\begin{figure}[h]
-	\centering
-		\includegraphics[scale=0.35]{./Capitulo2/imagenes/sa2vs1.png}
-		\caption{Gráfico de evolución ACC entre semilla 1 y 2  en HoeffdingTree Adaptativo.}
-	\label{sa2vs1}
-\end{figure}
-
-\begin{figure}[h]
-	\centering
-		\includegraphics[scale=0.35]{./Capitulo2/imagenes/sa2vs3.png}
-		\caption{Gráfico de evolución ACC entre semilla 2 y 3  en HoeffdingTree Adaptativo.}
-	\label{sa2vs3}
-\end{figure}
-
-\begin{figure}[h]
-	\centering
-		\includegraphics[scale=0.35]{./Capitulo2/imagenes/sa3vs1.png}
-		\caption{Gráfico de evolución ACC entre semilla 3 y 1  en HoeffdingTree Adaptativo.}
-	\label{sa3vs1}
-\end{figure}
 
 
 \section{Entrenamiento online con CD y mecanismos para olvidar instancias pasadas}
 
-\textit{Repita la experimentación del apartado anterior, cambiando el método de evaluación ?Interleaved Test-Then-Train? por el método de evaluación ?Prequential?, con una ventana deslizante de tamaño 1.000. ¿Qué efecto se nota en ambos clasificadores? ¿A qué es debido? Justifique los cambios relevantes en los resultados de los clasificadores.}
+\textit{Repita la experimentación del apartado anterior, cambiando el método de evaluación Interleaved Test-Then-Train por el método de evaluación Prequential, con una ventana deslizante de tamaño 1.000. ¿Qué efecto se nota en ambos clasificadores? ¿A qué es debido? Justifique los cambios relevantes en los resultados de los clasificadores.}
 
+En este caso, dado que no se pide discernir entre ambos algoritmos no se ha elaborado una población de resultados, sino que se han ejecutado las siguientes tareas a través de la GUI de MOA para tener recursos gráficos para el estudio del experimento y su interpretación. 
 
 {\small
 \begin{verbatim}
@@ -272,6 +255,7 @@ EvaluatePrequential -l trees.HoeffdingTree -s \
 \end{verbatim}
 }
 
+En las tareas anteriores hemos usado los mismos clasificadores que en el punto anterior, así como el mismo generador de flujo con cambio de contexto, el cambio en este punto está en añadir el evaluador Prequential con ventana deslizante de 1000, parámetro por defecto de esta evaluación y que no viene representado en la tarea por ese motivo. 
 
 
 \section{Entrenamiento online con CD y  detección CD}

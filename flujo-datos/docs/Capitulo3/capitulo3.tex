@@ -18,12 +18,19 @@ El problema de la clasificación es uno de los problemas más ampliamente estudiad
 Los clasificadores usados en los experimentos anteriores son dos, concretamente el \textbf{Hoeffding Tree} y el \textbf{Hoeffding Tree Adaptativo}.
 
 \begin{itemize}
-\item Hoeffding Tree: Es un algoritmo basado en árboles de decisión que trabaja de manera incremental de ahí su uso para trabajar con flujos de datos. Asume que la distribución de ejemplos no cambia en el tiempo y  se basa en el principio matemático de Hoeffding, que nos dice el número de ejemplos que son estadísticamente necesarios para partir una rama del árbol en pos de mejorar o no empeorar las medidas de bondad. Acorde a este principio, los arboles explotan la idea de que un conjunto pequeño de muestras puede ser usada para crear un buen árbol de decisión y de  ahí procede su potencia en determinados problemas como los de flujo de datos. Es un algoritmo bastante eficiente donde tanto el tiempo como la memoria para construir los modelos son lineales y no dependen del número de ejemplos en el stream. 
+\item \textbf{Hoeffding Tree}: Es un algoritmo basado en árboles de decisión que trabaja de manera incremental de ahí su uso para trabajar con flujos de datos. Asume que la distribución de ejemplos no cambia en el tiempo y  se basa en el principio matemático de Hoeffding, que nos dice el número de ejemplos que son estadísticamente necesarios para partir una rama del árbol en pos de mejorar o no empeorar las medidas de bondad. Acorde a este principio, los arboles explotan la idea de que un conjunto pequeño de muestras puede ser usada para crear un buen árbol de decisión y de  ahí procede su potencia en determinados problemas como los de flujo de datos. Es un algoritmo bastante eficiente donde tanto el tiempo como la memoria para construir los modelos son lineales y no dependen del número de ejemplos en el stream. 
 
-
-\item Hoeffding Tree Adaptativo: Este algoritmo es una versión del algoritmo anterior con idéntico funcionamiento pero que hace uso de ADWIN (Adaptative Window) para monitorizar los cambios de diferencia entre valores medios, con lo que detecta posibles descensos de accuracy en las ramas del árbol y las intercambia por mejores soluciones, acorde al accuracy, en la medida de lo posible por lo que a pesar de ser computacionalmente más complejo, los resultados serán en la mayoría de los casos mejores. 
+\item \textbf{Hoeffding Tree Adaptativo}: Este algoritmo es una versión del algoritmo anterior con idéntico funcionamiento pero que hace uso de ADWIN (Adaptative Window) para monitorizar los cambios de diferencia entre valores medios, con lo que detecta posibles descensos de accuracy en las ramas del árbol y las intercambia por mejores soluciones, acorde al accuracy, en la medida de lo posible por lo que a pesar de ser computacionalmente más complejo, los resultados serán en la mayoría de los casos mejores. 
 
 \end{itemize}
+
+Si dejamos de lado los clasificadores y nos centramos en los métodos de evaluación usados encontramos tres diferentes:
+
+\begin{enumerate}
+\item \textbf{Evaluación offline}: Este método de evaluación es el tradicional en el que se usa un conjunto de datos para construir el modelo (train) y posteriormente se evalúa con otro conjunto de datos diferente al utilizado para entrenar. Es el típico proceso de evaluación de clasificadores utilizado para problemas fuera del ámbito del flujo de datos. 
+\item \textbf{Interleaved Test Then Train}: Este método es el más común en flujo de datos, se basa en utilizar cada nuevo dato del flujo para probar el modelo y posteriormente se añade este dato a la fase de entrenamiento. Este método concretamente se realiza de manera incremental es decir, cada nuevo dato que va llegando se va teniendo en cuenta desde el inicio hasta el fin, siendo esta la principal diferencia con el método prequential que ahora veremos. 
+\item \textbf{Prequential}:  El método prequential en moa usa la misma filosofía de \textit{test then train} pero usa una ventana deslizante cuyo valor podemos fijar. Esta ventana deslizante nace de la filosofía de que los datos nuevos son los mas relevantes por lo que el modelo de train se va construyendo bajo el umbral de esta ventana deslizante olvidando los datos mas antiguos.
+\end{enumerate}
 
 \section{Concept Drift}
 

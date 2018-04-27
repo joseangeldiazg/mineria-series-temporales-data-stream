@@ -148,6 +148,23 @@ resultadosp2HTA_kappa
 
 #Fusionamos todo en una tabla:
 
-tabla
 tablap2 <- as.data.frame(cbind("HT Acc"=resultadosp2HT_acc, "HT Kappa"=resultadosp2HT_kappa,
                              "HT Adaptative Acc"=resultadosp2HTA_acc, "HT Adaptative Kappa"=resultadosp2HTA_kappa))
+
+
+
+#Vamos a comprobar si las distribuciones son normales
+
+
+
+# Obtenemos información sobre la normalidad de la muestra
+
+cvm.test(resultadosp2HTA_acc)
+cvm.test(resultadosp2HT_acc)
+
+
+#Como los p-value son > 0.005, podemos concluir que la muestra es normal Usamos tstudent para ver si hay diferencias
+
+t.test(resultadosp2HT_acc,resultadosp2HTA_acc)
+
+
